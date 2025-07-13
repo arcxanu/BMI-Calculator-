@@ -1,0 +1,188 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>BMI Neon Calculator</title>  
+  <style>  
+    * {  
+      margin: 0;  
+      padding: 0;  
+      box-sizing: border-box;  
+    }  
+  
+    body {  
+      height: 100vh;  
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);  
+      font-family: 'Segoe UI', sans-serif;  
+      display: flex;  
+      justify-content: center;  
+      align-items: center;  
+      padding: 20px;  
+    }  
+  
+    .container {  
+      background: #111;  
+      padding: 25px;  
+      border-radius: 20px;  
+      box-shadow: 0 0 25px #00ffe1a4;  
+      max-width: 350px;  
+      width: 100%;  
+      animation: fadeIn 1s ease;  
+    }  
+  
+    h1 {  
+      text-align: center;  
+      color: #00ffe1;  
+      text-shadow: 0 0 15px #00ffe1;  
+      margin-bottom: 25px;  
+      font-size: 28px;  
+      animation: neonFlicker 2s infinite alternate;  
+    }  
+  
+    input, select {  
+      width: 100%;  
+      padding: 12px;  
+      background: #2a2a2a;  
+      border: none;  
+      border-radius: 8px;  
+      font-size: 16px;  
+      color: #fff;  
+      margin-bottom: 15px;  
+      outline: none;  
+      transition: box-shadow 0.3s ease;  
+    }  
+  
+    input:focus, select:focus {  
+      box-shadow: 0 0 10px #00ffe1;  
+    }  
+  
+    button {  
+      width: 100%;  
+      padding: 12px;  
+      background: #00ffe1;  
+      color: #000;  
+      font-weight: bold;  
+      font-size: 18px;  
+      border: none;  
+      border-radius: 10px;  
+      cursor: pointer;  
+      transition: transform 0.2s, background 0.3s;  
+      box-shadow: 0 0 15px #00ffe1b3;  
+    }  
+  
+    button:hover {  
+      background: #00c9b7;  
+      transform: scale(1.03);  
+    }  
+  
+    .result {  
+      margin-top: 20px;  
+      background: #1e1e1e;  
+      padding: 15px;  
+      border-radius: 12px;  
+      text-align: center;  
+      font-size: 18px;  
+      color: #00ffe1;  
+      box-shadow: 0 0 10px #00ffe1a0;  
+      display: none;  
+      animation: scaleUp 0.5s ease-in-out forwards;  
+    }  
+  
+    .bmi-label {  
+      font-size: 16px;  
+      color: #ccc;  
+      margin-top: 5px;  
+    }  
+
+    .brand {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+
+    @keyframes neonFlicker {  
+      0% { text-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1; }  
+      100% { text-shadow: 0 0 20px #00ffe1, 0 0 35px #00ffe1; }  
+    }  
+  
+    @keyframes fadeIn {  
+      from { opacity: 0; transform: translateY(-20px); }  
+      to { opacity: 1; transform: translateY(0); }  
+    }  
+  
+    @keyframes scaleUp {  
+      from { transform: scale(0.8); opacity: 0; }  
+      to { transform: scale(1); opacity: 1; }  
+    }  
+  </style>  
+</head>  
+<body>  
+  
+  <div class="container">  
+    <h1>BMI Calculator</h1>  
+    <input type="number" id="height" placeholder="Enter height">  
+    <select id="heightUnit">  
+      <option value="cm">Centimeters (cm)</option>  
+      <option value="m">Meters (m)</option>  
+      <option value="ft">Feet (ft)</option>  
+    </select>  
+    <input type="number" id="weight" placeholder="Enter weight (kg)">  
+    <button onclick="calculateBMI()">Calculate</button>  
+    <div class="result" id="resultBox">  
+      <div class="bmi-label">Your BMI is:</div>  
+      <div style="font-size: 24px; font-weight: bold;" id="bmiValue">--</div>  
+      <div class="bmi-label" id="bmiCategory">--</div>  
+    </div>  
+    <div class="brand">Powered by <span>ARCXANU</span></div>
+  </div>  
+  
+  <script>  
+    function calculateBMI() {  
+      const h = parseFloat(document.getElementById('height').value);  
+      const unit = document.getElementById('heightUnit').value;  
+      const w = parseFloat(document.getElementById('weight').value);  
+      const resultBox = document.getElementById('resultBox');  
+      const bmiValue = document.getElementById('bmiValue');  
+      const bmiCategory = document.getElementById('bmiCategory');  
+  
+      if (!h || !w || h <= 0 || w <= 0) {  
+        bmiValue.textContent = "Invalid Input";  
+        bmiCategory.textContent = "";  
+        resultBox.style.display = "block";  
+        return;  
+      }  
+  
+      let heightInMeters;  
+      if (unit === 'cm') {  
+        heightInMeters = h / 100;  
+      } else if (unit === 'm') {  
+        heightInMeters = h;  
+      } else if (unit === 'ft') {  
+        heightInMeters = h * 0.3048;  
+      }  
+  
+      const bmi = (w / (heightInMeters ** 2)).toFixed(1);  
+      bmiValue.textContent = bmi;  
+  
+      let category = "";  
+      if (bmi < 18.5) category = "Underweight ❗";  
+      else if (bmi < 24.9) category = "Normal ✅";  
+      else if (bmi < 29.9) category = "Overweight ⚠️";  
+      else category = "Obese ❌";  
+  
+      bmiCategory.textContent = category;  
+      resultBox.style.display = "block";  
+    }  
+  </script>  
+  
+</body>  
+</html>
